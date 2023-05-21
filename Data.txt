@@ -1,12 +1,1 @@
-Super user : username :Sonu
-Email : sonu.lal126@gmail.com
-password : 12345678
-
-
-Nikhil
-nikhilgupta@gupta.com
-qwerty@123
-
-Nilesh
-nileshgupta@gupta.com
-qwerty@123
+Super user credentials 
