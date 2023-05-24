@@ -8,6 +8,10 @@
 </style>
 <div class="room-container">
     <div>
+        {% if room.host == request.user %}
+        <a href="{% url 'delete-room' room.id %}">Delete</a>
+        <a href="{% url 'update-room' room.id %}">Edit</a>
+        {% endif %}
         <h1>{{room.name}}</h1>
         <label>Room created by : </label>
         <small>@{{room.host.username}}</small>
