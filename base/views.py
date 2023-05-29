@@ -7,6 +7,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
+from django_ratelimit.decorators import ratelimit
+from django.core.cache import cache
+from django.http import HttpResponse
+from functools import wraps
+from datetime import datetime, timedelta
 
 
 def home(request):
@@ -37,6 +42,7 @@ def room(request,pk):
     context={'room':room,'room_messages':room_messages,'participants':participants}
     return render(request,'base/room.html',context)
 
+@ratelimit(key='user', rate='3/m')
 @login_required(login_url='login')
 def createRoom(request):
     form = RoomForm()
@@ -76,6 +82,8 @@ def deleteRoom(request,pk):
     context = {'obj':room}
     return render(request,'base/delete.html',context)
 
+
+@ratelimit(key='user', rate='5/m')
 def loginPage(request):
     page='login'
     if request.user.is_authenticated:
