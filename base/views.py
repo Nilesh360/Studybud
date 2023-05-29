@@ -12,6 +12,10 @@ from django.core.cache import cache
 from django.http import HttpResponse
 from functools import wraps
 from datetime import datetime, timedelta
+from rest_framework.throttling import UserRateThrottle,AnonRateThrottle
+from rest_framework.views import APIView
+from rest_framework.decorators import api_view,throttle_classes,action
+
 
 
 def home(request):
@@ -83,7 +87,10 @@ def deleteRoom(request,pk):
     return render(request,'base/delete.html',context)
 
 
-@ratelimit(key='user', rate='5/m')
+@ratelimit(key='user', rate='50/m')
+#@api_view(['GET'])
+#@throttle_classes([AnonRateThrottle])
+#@action(detail=True, methods=["GET"], throttle_classes=[UserRateThrottle])
 def loginPage(request):
     page='login'
     if request.user.is_authenticated:
@@ -155,8 +162,7 @@ def deleteMessage(request,pk):
     context = {'obj':message}
     return render(request,'base/delete.html',context)
 
-
-
+@throttle_classes([UserRateThrottle])
 def userProfile(request,pk):
     user = User.objects.get(id=pk)
     rooms = user.room_set.all()
